@@ -1,0 +1,83 @@
+<!doctype html>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--Import Google Icon Font-->
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Import materialize.css-->
+		<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	</head>
+
+	<body>
+		<!--Import jQuery before materialize.js-->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/materialize.min.js"></script>
+
+		<script type="text/javascript">
+			$(function() {
+				$.get( "https://192.168.0.101/json.htm?type=command&param=getuservariables", function( data ) {
+
+
+
+						$( "#consigneConfortZoneJour" ).html( data.result[0].Value+'&deg;C' );
+						$( "#consigneEcoZoneJour" ).html( data.result[1].Value+'&deg;C' );
+						$( "#consigneZoneJour" ).html( data.result[2].Value+'&deg;C' );
+
+						$("#consigneConfortZoneJour").removeClass("new green");
+						$("#consigneEcoZoneJour").removeClass("new green");
+
+						if(data.result[0].Value === data.result[2].Value) {
+								$("#consigneConfortZoneJour").addClass("new green");
+								$("#consigneEcoZoneJour").addClass("badge");
+						} else {
+								$("#consigneEcoZoneJour").addClass("new green");
+								$("#consigneConfortZoneJour").addClass("badge");
+						}
+
+				});
+				$.get("https://192.168.0.101/json.htm?type=devices&filter=temp&used=true&order=Name&plan=0", function(data){
+					$( "#temperatureZoneJour" ).html( data.result[0].Temp+'&deg;C' );
+					$( "#hygrometrieZoneJour" ).html( data.result[0].Humidity+'% ' + data.result[0].HumidityStatus);
+
+				});
+
+			});
+		</script>
+
+
+		<div class="container">
+
+			<div class="row">
+
+				<div class="col s12 m6 l6 z-depth-1" style="margin-top:1em">
+					<div class="center"><span style="font-size:2em">Zone Jour</span>
+
+					<div class="row">
+						<div class="col s9">
+			  			<div id="temperatureZoneJour" style="font-weight:lighter; font-size:3em; color:#f9a825"></div>
+							<div id="hygrometrieZoneJour" style="font-weight:lighter; color:#64B5F6"></div>
+						</div>
+						<div class="col s3">
+							<span data-badge-caption="" class="badge" style="position:relative" id="consigneConfortZoneJour"></span>
+							<span data-badge-caption="" class="badge" style="position:relative" id="consigneEcoZoneJour"></span>
+						</div>
+					</div>
+
+					</div>
+				</div>
+
+
+
+
+
+
+			</div>
+
+		</div>
+
+	</body>
+</html>
